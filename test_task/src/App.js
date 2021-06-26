@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -12,7 +13,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch("https://api.randomuser.me/?results=1000")
+    fetch("https://api.randomuser.me/?results=30")
       .then(res => res.json())
       .then(
         (result) => {
@@ -39,14 +40,27 @@ export default class App extends React.Component {
     } else if (!isLoaded) {
       return <div>Загрузка...</div>;
     } else {
+      // return ("asd");
+
+      // items.map(function(item) {
+      //   if (item.registered.age > 10) {
+      //     console.log("asd");
+          
+      //   }
+      // });
+
+
+
       return (
-        <ul>
+        <div>
           {items.map(item => (
-            <li key={item.id}>
-              {item.name.title} {item.name.last}
-            </li>
+
+            {item.registered.age > 20 ? <p> asd item.registered.age</p> : "asd"}
+
+
+
           ))}
-        </ul>
+          </div>
       );
     }
   }
