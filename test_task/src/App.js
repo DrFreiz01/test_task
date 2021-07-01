@@ -1,6 +1,4 @@
-import React, {useState, useContext} from 'react';
-import ReactDOM from 'react-dom';
-import Block from "./Block";
+import React from 'react';
 import List from "./List";
 import {MainContext} from "./Context";
 import Favorites from "./Favorites";
@@ -11,10 +9,10 @@ export default class App extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            currentCard: null
+            currentCard: null,
+            allCards: []
             // items: []
         };
-        let items = [];
         this.filterList = this.filterList.bind(this);
     }
 
@@ -45,6 +43,19 @@ export default class App extends React.Component {
         this.setState({currentCard: value})
     }
 
+    updateFavoriteCards = (value) => {
+        this.setState(previousState => ({
+            allCards: [...previousState.allCards, value]
+        }));
+    }
+
+    removeFavoriteCards = (value) => {
+        let test = this.state.allCards.filter(item => item.login.uuid !== value)
+        this.setState({
+            allCards: test
+        });
+    }
+
     filterList(e) {
         const filteredList = this.items.filter(item => {
             if (item.name.first.toLowerCase().search(e.target.value.toLowerCase()) !== -1) {
@@ -57,7 +68,6 @@ export default class App extends React.Component {
     }
 
     render() {
-        console.log(this.state.currentCard)
         const {error, isLoaded, items} = this.state;
         if (error) {
             return <div>Ошибка: {error.message}</div>;
@@ -71,7 +81,14 @@ export default class App extends React.Component {
             )
         } else {
             return (
-                <MainContext.Provider value={{items: this.state.items, updateData: this.updateData, currentCard: this.state.currentCard}}>
+                <MainContext.Provider value={{
+                    items: this.state.items,
+                    updateData: this.updateData,
+                    currentCard: this.state.currentCard,
+                    updateFavoriteCards: this.updateFavoriteCards,
+                    allCards: this.state.allCards,
+                    removeFavoriteCards: this.removeFavoriteCards
+                }}>
                     <div className="container py-5">
                         <div className="input-group flex-nowrap mb-3">
                             <span className="input-group-text" id="addon-wrapping">Поиск </span>
@@ -82,7 +99,7 @@ export default class App extends React.Component {
 
                         <div className="row">
                             <List/>
-                            <Favorites />
+                            <Favorites/>
 
                         </div>
                     </div>

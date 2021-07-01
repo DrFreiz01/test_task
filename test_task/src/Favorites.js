@@ -2,13 +2,23 @@ import React, {useState, useContext} from 'react';
 import ReactDOM from 'react-dom';
 import {MainContext} from "./Context";
 import Block from "./Block";
+import FavoriteBlock from "./FavoriteBlock";
 
 export default class Favorites extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            current: null
+            currentCard: null,
+            allCards: null
         };
+    }
+
+    dragStartHandler(e) {
+        e.preventDefault()
+    }
+
+    dragEndHandler(e) {
+        e.preventDefault()
     }
 
     dragOverHandler(e) {
@@ -16,34 +26,34 @@ export default class Favorites extends React.Component {
         return undefined;
     }
 
-    dropHandler(e, item) {
-        this.setState({current: item})
-        console.log(this.state.current)
+    dropHandler(e, item, updateFavoriteCards) {
+        console.log(item)
+        updateFavoriteCards(item)
     }
 
     render() {
         let value = this.context;
-        console.log(this.state.current)
-
-        let result;
-        if (this.state.current) {
-            console.log(this.state.current.email)
-            result = <p>{this.state.current.email}</p>
-        }
-
+        let result = [];
         return (
-        <div className="col-6">
 
-            <div className="border-1 rounded border h-100 pb-2"
+
+
+        <div className="col-6 ">
+
+            {value.allCards.map((item, index) => {
+                result.push(<FavoriteBlock item={{item, index}}/>)
+            })}
+
+            <div className="border-1 rounded border h-100 p-2"
                  draggable={true}
+                 onDragStart={e => this.dragStartHandler(e)}
+                 onDragLeave={e => this.dragEndHandler(e)}
                  onDragOver={e => this.dragOverHandler(e)}
-                 onDrop={e => this.dropHandler(e, value.currentCard)}>
+                 onDrop={e => this.dropHandler(e, value.currentCard, value.updateFavoriteCards)}>
                 {result}
             </div>
-
         </div>
     )
-        ;
     }
 }
 

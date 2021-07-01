@@ -20,7 +20,7 @@ export default class List extends React.Component {
             <div className="col-6">
 
                 {value.items.map((item, index) => {
-                    if (item.registered.age < 10) {
+                    if (item.registered.age <= 10) {
                         UpTo10.push(<Block item={item}/>)
                     } else if (item.registered.age > 10 && item.registered.age <= 20) {
                         UpTo20.push(<Block item={item}/>)
@@ -36,7 +36,10 @@ export default class List extends React.Component {
                                     data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapseOne" aria-expanded="false"
                                     aria-controls="flush-collapseOne">
-                                10
+                                <div className="d-flex">
+                                    <div className="pe-5"><b>Всего {UpTo10.length} записей</b></div>
+                                    <div>{UpTo10.length == 0 ? 'Ничего не нашлось' : 'От 0 до 10 года'}</div>
+                                </div>
                             </button>
                         </h2>
                         <div id="flush-collapseOne" className="accordion-collapse collapse p-2"
@@ -50,7 +53,10 @@ export default class List extends React.Component {
                                     data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapseTwo" aria-expanded="false"
                                     aria-controls="flush-collapseTwo">
-                                20
+                                <div className="d-flex">
+                                    <div className="pe-5"><b>Всего {UpTo20.length} записей</b></div>
+                                    <div>{UpTo20.length == 0 ? 'Ничего не нашлось' : 'От 10 до 20 года'}</div>
+                                </div>
                             </button>
                         </h2>
                         <div id="flush-collapseTwo" className="accordion-collapse collapse p-2"
@@ -64,7 +70,10 @@ export default class List extends React.Component {
                                     data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapseThree" aria-expanded="false"
                                     aria-controls="flush-collapseThree">
-                                30
+                                <div className="d-flex">
+                                    <div className="pe-5"><b>Всего {UpTo30.length} записей</b></div>
+                                    <div>{UpTo30.length == 0 ? 'Ничего не нашлось' : 'От 20 до 30 года'}</div>
+                                </div>
                             </button>
                         </h2>
                         <div id="flush-collapseThree" className="accordion-collapse collapse p-2"
