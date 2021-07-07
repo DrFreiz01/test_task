@@ -35,16 +35,13 @@ export default class Favorites extends React.Component {
         let value = this.context;
         let result = [];
         return (
-
-
-
         <div className="col-6 ">
 
             {value.allCards.map((item, index) => {
                 result.push(<FavoriteBlock item={{item, index}}/>)
             })}
 
-            <div className="border-1 rounded border h-100 p-2"
+            <div className="border-1 rounded border h-100 p-2 overflow-auto"
                  draggable={true}
                  onDragStart={e => this.dragStartHandler(e)}
                  onDragLeave={e => this.dragEndHandler(e)}
