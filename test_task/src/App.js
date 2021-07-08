@@ -1,7 +1,9 @@
 import React from 'react';
-import List from "./List";
+import Lists from "./Lists";
 import {MainContext} from "./Context";
 import Favorites from "./Favorites";
+import { FixedSizeList as List } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 export default class App extends React.Component {
     constructor(props) {
@@ -98,7 +100,7 @@ export default class App extends React.Component {
                         </div>
 
                         <div className="row">
-                            <List/>
+                            <Lists/>
                             <Favorites/>
 
                         </div>

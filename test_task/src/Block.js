@@ -1,7 +1,6 @@
 import React, {useState, useContext} from 'react';
 import ReactDOM from 'react-dom';
 import {MainContext} from "./Context";
-import List from "./List";
 
 export default class Block extends React.Component {
     constructor(props) {

@@ -1,7 +1,6 @@
 import React, {useState, useContext} from 'react';
 import ReactDOM from 'react-dom';
 import {MainContext} from "./Context";
-import Block from "./Block";
 import FavoriteBlock from "./FavoriteBlock";
 
 export default class Favorites extends React.Component {

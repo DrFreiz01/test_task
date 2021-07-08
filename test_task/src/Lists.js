@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Block from "./Block";
 import {MainContext} from "./Context";
 
-export default class List extends React.Component {
+export default class Lists extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
