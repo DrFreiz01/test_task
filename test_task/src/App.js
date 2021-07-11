@@ -19,7 +19,7 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        fetch("https://api.randomuser.me/?results=5000" +
+        fetch("https://api.randomuser.me/?results=100" +
             "")
             .then(res => res.json())
             .then(
@@ -96,15 +96,15 @@ export default class App extends React.Component {
                     allCards: this.state.allCards,
                     removeFavoriteCards: this.removeFavoriteCards
                 }}>
-                    <div className="container py-5">
-                        <div className="input-group flex-nowrap mb-3">
+                    <div className="container py-3 vh-100">
+                        <div className="input-group flex-nowrap mb-3" style={{height: '5%'}}>
                             <span className="input-group-text" id="addon-wrapping">Поиск </span>
                             <input type="text" className="form-control" placeholder="Leslie Nielsen"
                                    aria-label="Username"
                                    aria-describedby="addon-wrapping" onChange={this.filterList}/>
                         </div>
 
-                        <div className="row">
+                        <div className="row" style={{height: '90%'}}>
                             <Lists/>
                             <Favorites/>
 

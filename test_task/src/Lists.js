@@ -8,7 +8,14 @@ import AutoSizer from "react-virtualized-auto-sizer";
 export default class Lists extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            height: null
+        };
+    }
+
+    componentDidMount() {
+        const height = (document.getElementById('idList').clientHeight) - (document.getElementById('idListHeader').clientHeight);
+        this.setState({ height: height });
     }
 
     render() {
@@ -49,13 +56,13 @@ export default class Lists extends React.Component {
         );
 
         let tabActive = {
-            classes: "border rounded-0 list-group-item list-group-item-action"
+            classes: "border rounded-0 list-group-item list-group-item-action d-flex flex-column justify-content-center align-items-center"
         }
 
         return (
-            <div className="col-6">
-                <div className="row w-100">
-                    <div className="col-12">
+            <div id="idList" className="col-6 h-100">
+                <div className="row">
+                    <div id="idListHeader" className="col-12" style={{height: '7%'}}>
                         <div className="list-group flex-row" id="list-tab" role="tablist">
                             <a className={UpTo10.length ? tabActive.classes + " active" : tabActive.classes + " disabled"}
                                id="list-home-list"
@@ -76,15 +83,15 @@ export default class Lists extends React.Component {
                             </a>
                         </div>
                     </div>
-                    <AutoSizer style={{width: '100%'}}>
+                    <AutoSizer style={{width: '100%', height: '90%'}}>
                         {() => (
-                            <div className="col-12">
-                                <div className="tab-content" id="nav-tabContent">
+                            <div className="col-12 p-0 w-100">
+                                <div className="tab-content w-100" id="nav-tabContent">
                                     <div className="tab-pane fade show active" id="list-home" role="tabpanel"
                                          aria-labelledby="list-home-list">
                                         <List
                                             className="List"
-                                            height={650}
+                                            height={this.state.height}
                                             itemCount={UpTo10.length}
                                             itemSize={100}
                                             width={'100%'}
@@ -96,7 +103,7 @@ export default class Lists extends React.Component {
                                          aria-labelledby="list-profile-list">
                                         <List
                                             className="List"
-                                            height={650}
+                                            height={this.state.height}
                                             itemCount={UpTo20.length}
                                             itemSize={100}
                                             width={'100%'}
@@ -108,7 +115,7 @@ export default class Lists extends React.Component {
                                          aria-labelledby="list-messages-list">
                                         <List
                                             className="List"
-                                            height={650}
+                                            height={this.state.height}
                                             itemCount={UpTo30.length}
                                             itemSize={100}
                                             width={'100%'}
