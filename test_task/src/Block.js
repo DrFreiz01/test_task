@@ -23,9 +23,12 @@ export default class Block extends React.Component {
     render() {
         let value = this.context;
         return (
+
             <div key={this.props.index} className="main__block border-3 rounded my-2 px-3 py-2 border d-flex"
                  draggable={true}
-                 onDragStart={e => this.dragStartHandler(e, this.props.item, value.updateData)}
+
+                 onMouseDown={e => this.dragStartHandler(e, this.props.item, value.updateData)}
+                 // onDragStart={e => this.dragStartHandler(e, this.props.item, value.updateData)}
                  onDragLeave={e => this.dragEndHandler(e)}
                  onDragEnd={e => this.dragEndHandler(e)}
             >

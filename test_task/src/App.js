@@ -19,7 +19,7 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        fetch("https://api.randomuser.me/?results=100" +
+        fetch("https://api.randomuser.me/?results=5000" +
             "")
             .then(res => res.json())
             .then(
@@ -46,15 +46,20 @@ export default class App extends React.Component {
     }
 
     updateFavoriteCards = (value) => {
-        this.setState(previousState => ({
-            allCards: [...previousState.allCards, value]
-        }));
+        let result = this.state.allCards.filter(item => item.login.uuid == value.login.uuid)
+        if (result.length == 0) {
+            this.setState(previousState => ({
+                allCards: [...previousState.allCards, value]
+            }));
+        }
+
+
     }
 
     removeFavoriteCards = (value) => {
-        let test = this.state.allCards.filter(item => item.login.uuid !== value)
+        let result = this.state.allCards.filter(item => item.login.uuid !== value)
         this.setState({
-            allCards: test
+            allCards: result
         });
     }
 

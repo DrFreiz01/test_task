@@ -26,7 +26,6 @@ export default class Favorites extends React.Component {
     }
 
     dropHandler(e, item, updateFavoriteCards) {
-        console.log(item)
         updateFavoriteCards(item)
     }
 
