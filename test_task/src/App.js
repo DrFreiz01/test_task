@@ -1,16 +1,20 @@
-import React, {useState} from 'react';
-import ReactDOM from 'react-dom';
-import Block from "./Block";
+import React from 'react';
+import Lists from "./Lists";
+import {MainContext} from "./Context";
+import Favorites from "./Favorites";
+import { FixedSizeList as List } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             error: null,
-            isLoaded: false
+            isLoaded: false,
+            currentCard: null,
+            allCards: []
             // items: []
         };
-        let items = [];
         this.filterList = this.filterList.bind(this);
     }
 
@@ -37,8 +41,29 @@ export default class App extends React.Component {
             )
     }
 
+    updateData = (value) => {
+        this.setState({currentCard: value})
+    }
+
+    updateFavoriteCards = (value) => {
+        let result = this.state.allCards.filter(item => item.login.uuid == value.login.uuid)
+        if (result.length == 0) {
+            this.setState(previousState => ({
+                allCards: [...previousState.allCards, value]
+            }));
+        }
+
+
+    }
+
+    removeFavoriteCards = (value) => {
+        let result = this.state.allCards.filter(item => item.login.uuid !== value)
+        this.setState({
+            allCards: result
+        });
+    }
+
     filterList(e) {
-        // console.log(this.state.items)
         const filteredList = this.items.filter(item => {
             if (item.name.first.toLowerCase().search(e.target.value.toLowerCase()) !== -1) {
                 return item.name.first.toLowerCase().search(e.target.value.toLowerCase()) !== -1;
@@ -46,17 +71,7 @@ export default class App extends React.Component {
                 return item.name.last.toLowerCase().search(e.target.value.toLowerCase()) !== -1;
             }
         });
-        // обновление состояния
         this.setState({items: filteredList});
-    }
-
-    dropHandler(e, item) {
-        e.preventDefault()
-        console.log(item)
-    }
-
-    dragOverHandler(e) {
-        e.preventDefault()
     }
 
     render() {
@@ -72,90 +87,30 @@ export default class App extends React.Component {
                 </div>
             )
         } else {
-            let UpTo10 = []
-            let UpTo20 = []
-            let UpTo30 = []
-
-
             return (
-                <div className="container py-5">
-
-                    <div className="input-group flex-nowrap mb-3">
-                        <span className="input-group-text" id="addon-wrapping">Поиск </span>
-                        <input type="text" className="form-control" placeholder="Leslie Nielsen" aria-label="Username"
-                               aria-describedby="addon-wrapping" onChange={this.filterList} />
-                    </div>
-
-                    {this.state.items.map((item, index) => {
-                        if (item.registered.age < 10) {
-                            UpTo10.push(<Block item={item}/>)
-                        } else if (item.registered.age > 10 && item.registered.age <= 20) {
-                            UpTo20.push(<Block item={item}/>)
-                        } else if (item.registered.age > 20 && item.registered.age <= 30) {
-                            UpTo30.push(<Block item={item}/>)
-                        }
-                    })}
-
-                    <div className="row">
-                        <div className="col-6">
-                            <div className="accordion" id="accordionFlushExample">
-                                <div className="accordion-item">
-                                    <h2 className="accordion-header" id="flush-headingOne">
-                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                                aria-controls="flush-collapseOne">
-                                            10
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseOne" className="accordion-collapse collapse p-2"
-                                         aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                        { UpTo10 }
-                                    </div>
-                                </div>
-                                <div className="accordion-item">
-                                    <h2 className="accordion-header" id="flush-headingTwo">
-                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#flush-collapseTwo" aria-expanded="false"
-                                                aria-controls="flush-collapseTwo">
-                                            20
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseTwo" className="accordion-collapse collapse p-2"
-                                         aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                                        { UpTo20 }
-                                    </div>
-                                </div>
-                                <div className="accordion-item">
-                                    <h2 className="accordion-header" id="flush-headingThree">
-                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#flush-collapseThree" aria-expanded="false"
-                                                aria-controls="flush-collapseThree">
-                                            30
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseThree" className="accordion-collapse collapse p-2"
-                                         aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-                                        { UpTo30 }
-                                    </div>
-                                </div>
-                            </div>
+                <MainContext.Provider value={{
+                    items: this.state.items,
+                    updateData: this.updateData,
+                    currentCard: this.state.currentCard,
+                    updateFavoriteCards: this.updateFavoriteCards,
+                    allCards: this.state.allCards,
+                    removeFavoriteCards: this.removeFavoriteCards
+                }}>
+                    <div className="container py-3 vh-100">
+                        <div className="input-group flex-nowrap mb-3" style={{height: '5%'}}>
+                            <span className="input-group-text" id="addon-wrapping">Поиск </span>
+                            <input type="text" className="form-control" placeholder="Leslie Nielsen"
+                                   aria-label="Username"
+                                   aria-describedby="addon-wrapping" onChange={this.filterList}/>
                         </div>
-                        <div className="col-6">
-                            <div className="border-1 rounded border h-100 pb-2"
-                                 draggable={true}
-                                 onDragOver={e => this.dragOverHandler(e)}
-                                 onDrop={e => this.dropHandler(e, this.props.item)}>
 
-                            </div>
+                        <div className="row" style={{height: '90%'}}>
+                            <Lists/>
+                            <Favorites/>
+
                         </div>
                     </div>
-
-
-
-
-
-                </div>
-
+                </MainContext.Provider>
             );
         }
     }
