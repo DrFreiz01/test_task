@@ -65,7 +65,7 @@ export default class App extends React.Component {
     }
 
     filterList = (e) => {
-        const filteredList = this.state.ListUsersMain.reduce(item => {
+        const filteredList = this.state.ListUsersMain.filter(item => {
             return item.name.first.toLowerCase().search(e.target.value.toLowerCase()) !== -1
                 || item.name.last.toLowerCase().search(e.target.value.toLowerCase()) !== -1
         })
