@@ -41,7 +41,7 @@ export default class Lists extends React.Component {
                 <div style={{height: '5%'}} className='border border-1 w-100 rounded mb-2 d-flex'>
                     <div className='UserListBG w-50 d-flex justify-content-around align-items-center'
                          onClick={() => this.switchTab('UpTo10')}>
-                        <span>От 10 до 20</span>
+                        <span>От 0 до 10</span>
                         <span
                             className={'badge bg-primary rounded-pill float-end p-2' +
                             (ListUsers.UpTo10.length > 0 ? ' bg-primary' : ' bg-secondary')}>Нашёл {ListUsers.UpTo10.length}
@@ -50,7 +50,7 @@ export default class Lists extends React.Component {
                     <div
                         className='UserListBG w-50 d-flex justify-content-around align-items-center border-1 border-start'
                         onClick={() => this.switchTab('UpTo20')}>
-                        <span>От 20 до 30</span>
+                        <span>От 10 до 20</span>
                         <span
                             className={'badge bg-primary rounded-pill float-end p-2' +
                             (ListUsers.UpTo20.length > 0 ? ' bg-primary' : ' bg-secondary')}>Нашёл {ListUsers.UpTo20.length}
