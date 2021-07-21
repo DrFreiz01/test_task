@@ -2,8 +2,6 @@ import React from 'react';
 import Lists from "./Lists";
 import {MainContext} from "./Context";
 import Favorites from "./Favorites";
-import { FixedSizeList as List } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
 
 export default class App extends React.Component {
     constructor(props) {
@@ -11,27 +9,32 @@ export default class App extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
+            ListUsers: [],
+            ListUsersMain: [],
             currentCard: null,
             allCards: []
-            // items: []
         };
-        this.filterList = this.filterList.bind(this);
     }
 
     componentDidMount() {
-        fetch("https://api.randomuser.me/?results=100" +
+        fetch("https://api.randomuser.me/?results=10" +
             "")
             .then(res => res.json())
             .then(
                 (result) => {
-                    this.items = result.results;
+                    const UpTo10 = [];
+                    const UpTo20 = [];
+
+                    result.results.map((item, index) => {
+                        Math.ceil((item.registered.age / 10)) === 1 ? UpTo10.push(item) : UpTo20.push(item)
+                    })
+
                     this.setState({
                         isLoaded: true,
-                        items: result.results
+                        ListUsers: {UpTo10: UpTo10, UpTo20: UpTo20},
+                        ListUsersMain: result.results
                     });
                 },
-                // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
-                // чтобы не перехватывать исключения из ошибок в самих компонентах.
                 (error) => {
                     this.setState({
                         isLoaded: true,
@@ -46,36 +49,45 @@ export default class App extends React.Component {
     }
 
     updateFavoriteCards = (value) => {
-        let result = this.state.allCards.filter(item => item.login.uuid == value.login.uuid)
+        const result = this.state.allCards.filter(item => item.login.uuid == value.login.uuid)
         if (result.length == 0) {
             this.setState(previousState => ({
                 allCards: [...previousState.allCards, value]
             }));
         }
-
-
     }
 
     removeFavoriteCards = (value) => {
-        let result = this.state.allCards.filter(item => item.login.uuid !== value)
+        const result = this.state.allCards.filter(item => item.login.uuid !== value)
         this.setState({
             allCards: result
         });
     }
 
-    filterList(e) {
-        const filteredList = this.items.filter(item => {
-            if (item.name.first.toLowerCase().search(e.target.value.toLowerCase()) !== -1) {
-                return item.name.first.toLowerCase().search(e.target.value.toLowerCase()) !== -1;
-            } else if (item.name.last.toLowerCase().search(e.target.value.toLowerCase()) !== -1) {
-                return item.name.last.toLowerCase().search(e.target.value.toLowerCase()) !== -1;
-            }
+    filterList = (e) => {
+        const filteredList = this.state.ListUsersMain.reduce(item => {
+            return item.name.first.toLowerCase().search(e.target.value.toLowerCase()) !== -1
+                || item.name.last.toLowerCase().search(e.target.value.toLowerCase()) !== -1
+        })
+
+        console.log(filteredList)
+
+        const UpTo10 = [];
+        const UpTo20 = [];
+
+        filteredList.map((item, index) => {
+            Math.ceil((item.registered.age / 10)) === 1 ? UpTo10.push(item) : UpTo20.push(item)
+        })
+
+        this.setState({
+            ListUsers: {UpTo10: UpTo10, UpTo20: UpTo20}
         });
-        this.setState({items: filteredList});
     }
 
     render() {
-        const {error, isLoaded, items} = this.state;
+        const {error, isLoaded, ListUsers, allCards, currentCard} = this.state;
+        const { updateData, updateFavoriteCards, removeFavoriteCards, filterList } = this;
+
         if (error) {
             return <div>Ошибка: {error.message}</div>;
         } else if (!isLoaded) {
@@ -89,27 +101,22 @@ export default class App extends React.Component {
         } else {
             return (
                 <MainContext.Provider value={{
-                    items: this.state.items,
-                    updateData: this.updateData,
-                    currentCard: this.state.currentCard,
-                    updateFavoriteCards: this.updateFavoriteCards,
-                    allCards: this.state.allCards,
-                    removeFavoriteCards: this.removeFavoriteCards
+                    ListUsers: ListUsers,
+                    updateData: updateData,
+                    currentCard: currentCard,
+                    updateFavoriteCards: updateFavoriteCards,
+                    allCards: allCards,
+                    removeFavoriteCards: removeFavoriteCards,
+                    filterList: filterList
                 }}>
-                    <div className="container py-3 vh-100">
-                        <div className="input-group flex-nowrap mb-3" style={{height: '5%'}}>
-                            <span className="input-group-text" id="addon-wrapping">Поиск </span>
-                            <input type="text" className="form-control" placeholder="Leslie Nielsen"
-                                   aria-label="Username"
-                                   aria-describedby="addon-wrapping" onChange={this.filterList}/>
-                        </div>
 
-                        <div className="row" style={{height: '90%'}}>
+                    <div className="container p-4 vh-100">
+                        <div className="row h-100">
                             <Lists/>
                             <Favorites/>
-
                         </div>
                     </div>
+
                 </MainContext.Provider>
             );
         }

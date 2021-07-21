@@ -1,59 +1,40 @@
-import React, {useState, useContext} from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
 import {MainContext} from "./Context";
 import FavoriteBlock from "./FavoriteBlock";
 
 export default class Favorites extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            currentCard: null,
-            allCards: null
-        };
-    }
-
-    dragStartHandler(e) {
-        e.preventDefault()
-    }
-
-    dragEndHandler(e) {
-        e.preventDefault()
-    }
-
-    dragOverHandler(e) {
+    dragOther = (e) => {
         e.preventDefault()
         return undefined;
     }
 
-    dropHandler(e, item, updateFavoriteCards) {
-        updateFavoriteCards(item)
+    dropHandler = (e, item, updateFavoriteCards) => {
+        this.context.updateFavoriteCards(this.context.currentCard)
     }
 
     render() {
-        let value = this.context;
-        let result = [];
+        const { allCards } = this.context;
+        const result = [];
         return (
+            <div className="col-6 h-100">
+                {allCards.map((item, index) => {
+                    result.push(<FavoriteBlock key={item.login.uuid} item={{item, index}}/>)
+                })}
 
-
-
-        <div className="col-6 h-100">
-            {value.allCards.map((item, index) => {
-                result.push(<FavoriteBlock item={{item, index}}/>)
-            })}
-
-            <div className="border-1 rounded border h-100 p-2 overflow-auto"
-                 draggable={true}
-                 onDragStart={e => this.dragStartHandler(e)}
-                 onDragLeave={e => this.dragEndHandler(e)}
-                 onDragOver={e => this.dragOverHandler(e)}
-                 onDrop={e => this.dropHandler(e, value.currentCard, value.updateFavoriteCards)}>
-                <div style={{height: '7%'}}>
-                    <p className="h3 text-center">Избранное</p>
+                <div className="border-1 rounded border h-100 p-3 overflow-auto"
+                     draggable={true}
+                     onDragStart={this.dragOther}
+                     onDragLeave={this.dragOther}
+                     onDragOver={this.dragOther}
+                     onDrop={this.dropHandler}
+                >
+                    <div className="d-flex justify-content-center align-items-center border border-1 rounded" style={{height: '5%'}}>
+                        <span className="fs-5 text-center">Избранное</span>
+                    </div>
+                    {result}
                 </div>
-                {result}
             </div>
-        </div>
-    )
+        )
     }
 }
 
